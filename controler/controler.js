@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken')
 const registerSchema=require('../model/register')
 const allproduct=require('../model/product')
 const product = require('../model/product')
+const subscribeuser=require('../model/email')
 const Razorpay = require('razorpay');
 var instance = new Razorpay({
     key_id: process.env.key_id,
@@ -218,19 +219,21 @@ const decreseqty=async(req,res)=>{
 const deleteCart=async(req,res)=>{
     const {id,userId}=req.body
     console.log(id,userId);
-    // const products=await registerSchema.findOne({_id:userId}).populate('cart')
+    // const products=await registerSchema.find({_id:userId}).populate('cart')
     // products.cart.map((item,index)=>{
     //     if(item._id==id)
         // {
         //    const data=item
         //    console.log("this is",data._id);
-           const deleteData= await registerSchema.findOneAndUpdate({ _id:userId },{ $pull: { "cart": {_id:null} } }, { new: true }).then((user) => {
-            console.log('Item removed from cart:', user);
-            // console.log(deleteData);
+           const deleteData= await registerSchema.findByIdAndUpdate(userId ,{ $pull: { "cart": {product:new mongoose.Types.ObjectId(id)} } }, { new: true }).then((user) => {
+            // console.log('Item removed from cart:', user);
+            res.send("Item delete sucessfully")
           })
           .catch((error) => {
             console.error('Error removing item from cart:', error);
+            res.send("something went wrong")
           });
+        //  console.log("deleted item",deleteData)
          
         }
 const useradress=async(req,res)=>{
@@ -254,5 +257,14 @@ var options = {
   }); 
 // res.send("data saved sucessfully")
 }
- module.exports = {register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress}
+const subscribe=(req,res)=>{
+   const{email}=req.body
+//    console.log(email)
+   const subscribeUserEmail={
+    email:email
+   }
+   const subscribe= subscribeuser.create(subscribeUserEmail)
+    res.send("Thanks for subscribe")
+}
+ module.exports = {register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress,subscribe}
 
