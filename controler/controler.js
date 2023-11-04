@@ -218,23 +218,14 @@ const decreseqty=async(req,res)=>{
 }
 const deleteCart=async(req,res)=>{
     const {id,userId}=req.body
-    console.log(id,userId);
-    // const products=await registerSchema.find({_id:userId}).populate('cart')
-    // products.cart.map((item,index)=>{
-    //     if(item._id==id)
-        // {
-        //    const data=item
-        //    console.log("this is",data._id);
-           const deleteData= await registerSchema.findByIdAndUpdate(userId ,{ $pull: { "cart": {product:new mongoose.Types.ObjectId(id)} } }, { new: true }).then((user) => {
-            // console.log('Item removed from cart:', user);
-            res.send("Item delete sucessfully")
+    console.log(id,userId);   
+         const deleteData= await registerSchema.findByIdAndUpdate(userId ,{ $pull: { "cart": {product:new mongoose.Types.ObjectId(id)} } }, { new: true }).then((user) => {         
+           res.send("Item delete sucessfully")
           })
           .catch((error) => {
             console.error('Error removing item from cart:', error);
             res.send("something went wrong")
-          });
-        //  console.log("deleted item",deleteData)
-         
+          });        
         }
 const useradress=async(req,res)=>{
 const {address,userId,cart,payment}=req.body
@@ -266,5 +257,16 @@ const subscribe=(req,res)=>{
    const subscribe= subscribeuser.create(subscribeUserEmail)
     res.send("Thanks for subscribe")
 }
- module.exports = {register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress,subscribe}
+const Itemcounter=async (req,res)=>{
+ const{userId}=req.body
+    const productItem=await registerSchema.findById(userId)
+    console.log(productItem.cart);
+    if(productItem.cart.length<=0)
+    {
+        console.log(productItem.cart.length);
+        return res.send('No item in cart')
+    }
+    return res.send(productItem.cart);
+}
+ module.exports = {register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress,subscribe,Itemcounter}
 

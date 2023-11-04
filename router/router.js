@@ -1,4 +1,4 @@
-const { register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress,subscribe} = require("../controler/controler")
+const { register,groceriess,phones,laptops,watchs,headphones,homeappliancess,login,cart,getcartData,increseqty,decreseqty,deleteCart,useradress,subscribe,Itemcounter} = require("../controler/controler")
 const router = require('express').Router()
 const {order,paymentVerify}=require('../controler/paymentControler')
  router.get('/',groceriess)
@@ -18,6 +18,7 @@ router.post('/api/order/userAddress',useradress)
 router.post('/api/order',order)
 // router.post('/api/order/payment/verify',paymentVerify)
  router.post('/api/subscribe',subscribe)
+ router.post('/item/counter',Itemcounter)
 module.exports = router
 
 
